@@ -1,6 +1,8 @@
 import React from "react";
 // Componentes do react route dom para gerenciar rotas
 import { BrowserRouter, Routes as RoutesDom, Route } from "react-router-dom";
+import AddListItem from "../pages/AddListItem";
+import EditListItem from "../pages/EditListItem";
 import Home from "../pages/Home";
 import ToDoList from "../pages/ToDoList";
 
@@ -21,7 +23,10 @@ function Routes() {
         <Route path="about" element={<h1>Sobre</h1>} />
         <Route path="to-do-list">
           <Route index element={<ToDoList />} />
+          <Route path="add-item/:idList" element={<AddListItem />} />
+          <Route path="edit-item/:idList/:idItem" element={<EditListItem />} />
         </Route>
+
         <Route path="users">
           {/* www.meusite.com.br/users/edit/1
         www.meusite.com.br/users/add

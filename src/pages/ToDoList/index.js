@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import listsStorage from "../../storage/listsStorage";
 
 function ToDoList() {
@@ -12,7 +12,7 @@ function ToDoList() {
   // lista[0][2]
   const [lists, setLists] = useState([]);
   const [selectedList, setSelectedList] = useState(0);
-
+  const navigate = useNavigate();
   // Função para adicionar lista vazia na variável lists
   const handleAddList = () => {
     // Sobrescreve o valor da variável lists
@@ -30,9 +30,9 @@ function ToDoList() {
   // Vai rodar no momento que o component for renderizado
   // É responsável por pegar a listagem que está no cache e por na variável de lista
   useEffect(() => {
-    // Pegamos a listagem do localstorage
+    // Pegamos a listagem do localStorage
     const listsJSON = listsStorage.get();
-    // Atribuimos a lista a variável lists
+    // Atribuímos a lista a variável lists
     setLists(listsJSON);
   }, []);
   // Vai ser chamado na primeira renderização do componente e sempre que a variável lists atualizar
@@ -40,6 +40,14 @@ function ToDoList() {
   useEffect(() => {
     listsStorage.set(lists);
   }, [lists]);
+  const handleRemoveItem = (idx) => {
+    // Clonando a variável das listas
+    var auxLists = [...lists];
+    // Removo posição do idx da sub-lista
+    auxLists[selectedList].splice(idx, 1);
+    // Reescrevo a variável lists
+    setLists(auxLists);
+  };
   return (
     <div>
       <h1>To do list</h1>
@@ -78,8 +86,14 @@ function ToDoList() {
             {lists[selectedList].map((item, idx) => (
               <li key={idx}>
                 <span>{item} </span>
-                <button>Editar</button>
-                <button>Deletar</button>
+                <button
+                  onClick={() =>
+                    navigate(`/to-do-list/edit-item/${selectedList + 1}/${idx}`)
+                  }
+                >
+                  Editar
+                </button>
+                <button onClick={() => handleRemoveItem(idx)}>Deletar</button>
               </li>
             ))}
           </ul>
